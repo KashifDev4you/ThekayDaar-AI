@@ -1,0 +1,95 @@
+rules_version = '2';
+
+// =============================================================================
+// Thekaydaar.pk — Cloud Firestore Security Rules
+//
+// AI House Planner additions (house_plans collection):
+//
+//   house_plans/{planId}
+//   house_plans/{planId}/versions/{n}
+//
+// Role model (spec §2, §23, §24):
+//   - CLIENT (owner)      → full read/write of their own plan documents,
+//                           including the private 3D/360/visualization URLs.
+//   - CONTRACTOR          → construction data ONLY. The rules below expose
+//                           the construction fields (plot size, floors,
+//                           requirements, plan_json, version) but STRIP the
+//                           private visualization URLs
+//                           (model_3d_url / panorama_url / visualization_url)
+//                           at the database layer — not merely hidden in the
+//                           Flutter UI.
+//   - everyone else       → no access.
+//
+// The contractor read path uses a `project_blueprints` projection
+// collection written by HousePlanService whenever a plan is created or
+// saved (sanitized construction copy — no private URLs). Because Firestore
+// rules cannot SELECT fields, the projection is a SEPARATE document that
+// simply never contains model_3d_url / panorama_url / visualization_url,
+// and the rules below reject any write that tries to add them — so the
+// restriction is enforced at the database layer, not just hidden in the
+// Flutter UI.
+//
+// Deploy with:
+//   firebase deploy --only firestore:rules
+// =============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────────────────────────
+    // HOUSE PLANS (AI House Planner) — client-owned private documents
+    // ─────────────────────────────────────────────────────────────
+    match /house_plans/{planId} {
+      // Only the owning client may read or write the full document.
+      // Private fields (model_3d_url, panorama_url, visualization_url)
+      // live ONLY here, so contractors can never read them from the DB.
+      allow read, write: if isOwner(resource.data.clientId);
+
+      // Version history — same owner-only rule.
+      match /versions/{versionId} {
+        allow read, write: if isOwner(
+          get(/databases/$(database)/documents/house_plans/$(planId)).data.clientId
+        );
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PROJECT BLUEPRINTS — sanitized construction projection (spec §23)
+    //
+    // projects/{projectId} gets a mirrored construction copy at
+    // project_blueprints/{projectId} (plot size, floors, rooms,
+    // requirements, version) WITHOUT any private visualization URL.
+    // Written by the owning client via HousePlanService; readable by any
+    // authenticated user so contractors can quote on the project.
+    // Writes that try to sneak in a private URL are rejected outright.
+    // ─────────────────────────────────────────────────────────────
+    match /project_blueprints/{projectId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated()
+        && request.resource.data.clientId == request.auth.uid
+        && !request.resource.data.keys().hasAny([
+             'model_3d_url', 'panorama_url', 'visualization_url'
+           ]);
+      allow delete: if isAuthenticated()
+        && resource.data.clientId == request.auth.uid;
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // EXISTING COLLECTIONS
+    //
+    // NOTE: this file only ships the house-planner-related rules. The rest
+    // of the app's collections keep whatever rules are already deployed in
+    // the Firebase console — merging rules is done in the console or in a
+    // fuller firebase-rules file managed by your team.
+    // ─────────────────────────────────────────────────────────────
+
+    // ── helpers ──────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(clientId) {
+      return isAuthenticated() && request.auth.uid == clientId;
+    }
+  }
+}

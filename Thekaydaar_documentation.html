@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thekaydaar.pk — Project Documentation</title>
+    <style>
+        body {
+            font-family: Calibri, Segoe UI, Arial, sans-serif;
+            color: #1f2937;
+            margin: 40px;
+            line-height: 1.5;
+        }
+
+        h1 {
+            color: #0F172A;
+            font-size: 28pt;
+            border-bottom: 3px solid #F59E0B;
+            padding-bottom: 8px;
+        }
+
+        h2 {
+            color: #0F172A;
+            font-size: 17pt;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 4px;
+            margin-top: 28px;
+        }
+
+        h3 {
+            color: #B45309;
+            font-size: 13pt;
+            margin-top: 18px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12px 0;
+            font-size: 10.5pt;
+        }
+
+        th {
+            background: #0F172A;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #0F172A;
+        }
+
+        td {
+            padding: 7px 8px;
+            border: 1px solid #cbd5e1;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        pre {
+            font-family: Consolas, Courier New, monospace;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            font-size: 9.5pt;
+            line-height: 1.35;
+        }
+
+        code {
+            font-family: Consolas, Courier New, monospace;
+            background: #f1f5f9;
+            padding: 1px 4px;
+        }
+
+        .subtitle {
+            font-size: 14pt;
+            color: #475569;
+        }
+
+        .meta {
+            color: #64748b;
+            font-size: 10pt;
+        }
+
+        ul {
+            margin-top: 6px;
+        }
+
+        .cover {
+            text-align: center;
+            padding: 60px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cover">
+        <h1 style="border:none; font-size:34pt;">🏗️ Thekaydaar.pk</h1>
+        <p class="subtitle">AI-Powered Construction Marketplace — Complete Project Documentation</p>
+        <p class="meta">Flutter · Firebase · Gemini AI (optional) &nbsp;|&nbsp; Version 1.0.0</p>
+        <p class="meta">Repository: https://github.com/KashifDev4you/ThekayDaar-AI</p>
+    </div>
+
+    <h2>Table of Contents</h2>
+    <ol>
+        <li>Project Overview</li>
+        <li>Key Features</li>
+        <li>User Roles</li>
+        <li>Technology Stack</li>
+        <li>System Architecture</li>
+        <li>App Startup &amp; Role Routing</li>
+        <li>Core Marketplace Workflow</li>
+        <li>Project Lifecycle States</li>
+        <li>AI House Planner</li>
+        <li>Connects &amp; Monetization</li>
+        <li>Firestore Data Model</li>
+        <li>Project Structure &amp; Modules</li>
+        <li>Security Model</li>
+        <li>Getting Started (Setup)</li>
+        <li>Environment Variables</li>
+    </ol>
+
+    <h2>1. Project Overview</h2>
+    <p>Thekaydaar.pk is a multi-role construction marketplace built in Flutter. It connects <b>Clients (Maaliks)</b> who
+        post construction projects with <b>Thekaydaars (Contractors)</b> who bid on them, managed under tiered
+        administrative oversight. The platform covers the full engagement lifecycle: project posting, bidding with a
+        Connects credit system, real-time chat, contract generation (PDF), billing and payments, ratings, and a built-in
+        <b>AI House Planner</b> that generates 2D blueprints, procedural 3D views, and 360° panoramas — fully functional
+        offline via a rule-based planner, with optional Gemini AI enhancement.
+    </p>
+
+    <h2>2. Key Features</h2>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>🏠 AI House Planner</td>
+            <td>Generates complete house plans from plot details — 2D blueprint, procedural 3D projection, and
+                first-person 360° panorama. Works fully offline via the built-in rule-based planner; Gemini AI is an
+                optional enhancement.</td>
+        </tr>
+        <tr>
+            <td>📋 Projects &amp; Bidding</td>
+            <td>Clients post construction projects with location details; contractors browse open projects and submit
+                bids.</td>
+        </tr>
+        <tr>
+            <td>💬 Real-time Chat</td>
+            <td>Firestore-powered messaging with image sharing via Cloudinary.</td>
+        </tr>
+        <tr>
+            <td>📄 Contract Management</td>
+            <td>Contract + scope-of-work creation with PDF generation, printing, and sharing.</td>
+        </tr>
+        <tr>
+            <td>💳 Billing &amp; Payments</td>
+            <td>Payment tracking and payment history per project.</td>
+        </tr>
+        <tr>
+            <td>⭐ Ratings &amp; Reviews</td>
+            <td>Clients rate contractors after project completion; ratings shown on public profiles.</td>
+        </tr>
+        <tr>
+            <td>🗺️ Maps &amp; Location</td>
+            <td>Google Maps location picker with automatic city/area detection (multi-level geocoding fallback).</td>
+        </tr>
+        <tr>
+            <td>🔔 Messages &amp; Notifications</td>
+            <td>In-app notification center for project and chat activity.</td>
+        </tr>
+        <tr>
+            <td>🌐 Bilingual Support</td>
+            <td>English / Urdu translation service with Jameel Noori Nastaleeq font.</td>
+        </tr>
+    </table>
+
+    <h2>3. User Roles</h2>
+    <table>
+        <tr>
+            <th>Role</th>
+            <th>Capabilities</th>
+        </tr>
+        <tr>
+            <td><b>Client (Maalik)</b></td>
+            <td>Post projects, generate AI house plans, review bids, accept bids, chat, sign contracts, make payments,
+                rate contractors.</td>
+        </tr>
+        <tr>
+            <td><b>Thekaydaar (Contractor)</b></td>
+            <td>Browse projects, place bids (spends Connects), view blueprint dimensions, chat, manage active jobs,
+                complete work.</td>
+        </tr>
+        <tr>
+            <td><b>Super Admin</b></td>
+            <td>Full platform control; reviews and approves pending admin sign-up requests.</td>
+        </tr>
+        <tr>
+            <td><b>Regional Admin</b></td>
+            <td>Regional administrative dashboard and oversight.</td>
+        </tr>
+        <tr>
+            <td><b>Support Desk</b></td>
+            <td>Handles support requests and ticket workflows.</td>
+        </tr>
+        <tr>
+            <td><b>Area Handler</b></td>
+            <td>Local-area administrative assistance.</td>
+        </tr>
+    </table>
+
+    <h2>4. Technology Stack</h2>
+    <table>
+        <tr>
+            <th>Category</th>
+            <th>Technology</th>
+        </tr>
+        <tr>
+            <td>Framework</td>
+            <td>Flutter (Dart SDK ^3.10.4)</td>
+        </tr>
+        <tr>
+            <td>Backend</td>
+            <td>Firebase — Authentication, Cloud Firestore, Firebase Storage</td>
+        </tr>
+        <tr>
+            <td>AI (optional)</td>
+            <td>Google Gemini API</td>
+        </tr>
+        <tr>
+            <td>Maps &amp; Location</td>
+            <td>google_maps_flutter, geolocator, geocoding</td>
+        </tr>
+        <tr>
+            <td>Media</td>
+            <td>Cloudinary, image_picker, cached_network_image</td>
+        </tr>
+        <tr>
+            <td>Documents</td>
+            <td>pdf, printing</td>
+        </tr>
+        <tr>
+            <td>Animations</td>
+            <td>Lottie</td>
+        </tr>
+        <tr>
+            <td>Configuration</td>
+            <td>flutter_dotenv (.env runtime secrets)</td>
+        </tr>
+        <tr>
+            <td>Utilities</td>
+            <td>intl, share_plus, http, url_launcher, timeago, connectivity_plus</td>
+        </tr>
+        <tr>
+            <td>Fonts</td>
+            <td>Poppins (English), Jameel Noori Nastaleeq (Urdu)</td>
+        </tr>
+        <tr>
+            <td>Platforms</td>
+            <td>Android, iOS, Web, Windows, macOS, Linux</td>
+        </tr>
+    </table>
+
+    <h2>5. System Architecture</h2>
+    <pre>
+                    ┌──────────────────────────────────┐
+                    │     Thekaydaar.pk Flutter App    │
+                    │   (Client / Thekaydaar / Admin)  │
+                    └────┬───────┬───────┬──────┬──────┘
+                         │       │       │      │
+        ┌────────────────┘       │       │      └──────────────┐
+        ▼                        ▼       ▼                     ▼
+┌───────────────┐      ┌──────────────┐ ┌────────────┐  ┌──────────────┐
+│ Firebase Auth │      │   Cloud      │ │  Firebase  │  │  Cloudinary  │
+│  (identity)   │      │  Firestore   │ │  Storage   │  │ (chat/proj.  │
+└───────────────┘      │  (database)  │ │  (files)   │  │   images)    │
+                       └──────┬───────┘ └────────────┘  └──────────────┘
+                              │
+                    ┌─────────┴─────────┐
+                    │ Firestore Rules   │
+                    │ (security, role   │
+                    │  and plan gating) │
+                    └───────────────────┘
+
+  Optional services:  Gemini API (AI planner)  ·  Google Maps + Geocoding
+</pre>
+    <table>
+        <tr>
+            <th>Layer</th>
+            <th>Responsibility</th>
+        </tr>
+        <tr>
+            <td>Flutter App</td>
+            <td>Multi-role UI, offline-capable AI House Planner, chat, contracts, billing</td>
+        </tr>
+        <tr>
+            <td>Firebase Auth</td>
+            <td>Authentication and session management</td>
+        </tr>
+        <tr>
+            <td>Cloud Firestore</td>
+            <td>Primary database — projects, bids, contracts, chats, plans, reviews, users</td>
+        </tr>
+        <tr>
+            <td>Cloudinary</td>
+            <td>Image uploads (chat photos, milestone proofs)</td>
+        </tr>
+        <tr>
+            <td>Gemini API</td>
+            <td>Optional AI enhancement — app never depends on it</td>
+        </tr>
+        <tr>
+            <td>Google Maps</td>
+            <td>Project location picker with city/area auto-detection</td>
+        </tr>
+    </table>
+
+    <h2>6. App Startup &amp; Role Routing</h2>
+    <pre>
+App Launch (main.dart)
+      │
+      ▼
+EnvConfig loads .env  ──►  Firebase.initializeApp()
+      │
+      ▼
+Authenticated? ── No ──► Onboarding + Login / Signup ──► (retry)
+      │
+     Yes
+      ▼
+User Role ──┬── Client      ──► Client Dashboard
+            ├── Thekaydaar  ──► Thekaydaar Dashboard
+            └── Admin       ──► Super Admin / Regional Admin /
+                                 Support Desk / Area Handler
+</pre>
+    <p>Secrets are loaded <b>before</b> Firebase init via <code>lib/services/env_config.dart</code>.
+        The Super Admin (identified by <code>SUPER_ADMIN_EMAIL</code>) reviews pending admin sign-up requests.</p>
+
+    <h2>7. Core Marketplace Workflow</h2>
+    <pre>
+CLIENT                          THEKAYDAAR
+──────                          ──────────
+Post Project /
+AI House Planner Wizard
+      │                         Browse open projects
+      ▼                               │
+Project saved (open)                  ▼
+      │                     Plan allows bidding? ── No ──► Upgrade plan
+      │                               │ Yes
+      │                         Enough connects?  ── No ──► Buy connects
+      │                               │ Yes
+      │                               ▼
+      │◄──── Bid placed (connects deducted) ────┤
+      │                                        
+Review bids                              
+      │                                       
+Accept bid ──────────────► project: in_progress + acceptedBid
+      │                     + active_jobs entry
+      ▼                               ▼
+        Real-time chat opens (chats/{jobId}/messages)
+                     │
+                     ▼
+        Contract + scope of work ──► PDF generated
+                     │
+                     ▼
+              Billing / payments
+                     │
+                     ▼
+             Work completed
+                     │
+                     ▼
+      Client rates Thekaydaar ──► Project completed
+</pre>
+    <h3>Step-by-Step</h3>
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Step</th>
+            <th>Actor</th>
+            <th>What Happens</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Post Project</td>
+            <td>Client</td>
+            <td>Project created in <code>projects</code> with <code>status: 'open'</code> (Post Project screen or AI
+                House Planner Wizard)</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Browse</td>
+            <td>Thekaydaar</td>
+            <td>Views open projects and client details</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Bid</td>
+            <td>Thekaydaar</td>
+            <td>Bid appended to <code>projects/{id}.bids[]</code>; Connects deducted in a Firestore transaction</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Accept Bid</td>
+            <td>Client</td>
+            <td>Project → <code>in_progress</code>, <code>acceptedBid</code> saved, <code>active_jobs</code> entry
+                created</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Chat</td>
+            <td>Both</td>
+            <td>Chat meta (<code>chats/{jobId}</code>) + real-time message stream; images via Cloudinary</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>Contract</td>
+            <td>Client</td>
+            <td>Contract + scope of work created; PDF generated, printed, or shared</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>Payments</td>
+            <td>Client</td>
+            <td>Billing screen — payments tracked with full history</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>Complete</td>
+            <td>Thekaydaar</td>
+            <td>Contract status → <code>work_completed</code> → <code>completed</code></td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>Review</td>
+            <td>Client</td>
+            <td>Rating saved to <code>reviews</code>; reflected on Thekaydaar public profile</td>
+        </tr>
+    </table>
+
+    <h2>8. Project Lifecycle States</h2>
+    <pre>
+Project:   open ──► in_progress ──► completed
+Contract:  pending ──► signed ──► work_completed ──► completed
+</pre>
+    <table>
+        <tr>
+            <th>Status</th>
+            <th>Set When</th>
+            <th>Meaning</th>
+        </tr>
+        <tr>
+            <td><code>open</code></td>
+            <td>Project posted / wizard finished</td>
+            <td>Accepting bids</td>
+        </tr>
+        <tr>
+            <td><code>in_progress</code></td>
+            <td>Client accepts a bid</td>
+            <td>Hired — chat, contract, payments active</td>
+        </tr>
+        <tr>
+            <td><code>completed</code></td>
+            <td>Contract finalized</td>
+            <td>Work done; rating unlocked</td>
+        </tr>
+    </table>
+
+    <h2>9. AI House Planner</h2>
+    <pre>
+Client Dashboard (AI House Planner card)
+      │
+      ▼
+CreateProjectWizard (6 steps)
+      │
+      ▼
+Profile / NIC / plan-quota gates OK? ── No ──► Complete profile ──► (retry)
+      │ Yes
+      ▼
+HousePlannerService.generatePlan
+      │
+      ▼
+Remote provider (Gemini, if API key present)
+      │
+      ▼
+Valid plan JSON? ── No ──┐
+      │ Yes              │
+      ▼                  │
+clampToPlot repair        ▼
+      │            Local RuleBasedPlanner (offline fallback)
+      ▼                  │
+Repair OK? ── No ────────┤
+      │ Yes              │
+      ▼                  ▼
+Save house_plans/{id} (+ versions/{n})
+      │
+      ├──► 2D BlueprintPainter
+      ├──► 3D Viewer (procedural projection)
+      ├──► 360° Panorama (first-person view)
+      │
+      ▼
+Create project (housePlanId + plotDetails, status: open)
+      │
+      ▼
+project_blueprints/{projectId} — sanitized copy for contractors
+</pre>
+    <table>
+        <tr>
+            <th>Aspect</th>
+            <th>Detail</th>
+        </tr>
+        <tr>
+            <td>Source of truth</td>
+            <td>Structured plan JSON (<code>HousePlan</code> model, feet internally)</td>
+        </tr>
+        <tr>
+            <td>Offline-first</td>
+            <td>Rule-based planner works with no API key — Gemini only enhances</td>
+        </tr>
+        <tr>
+            <td>Reliability</td>
+            <td>Remote → validate → repair → local fallback chain</td>
+        </tr>
+        <tr>
+            <td>Versioning</td>
+            <td>Every regeneration stored under <code>house_plans/{id}/versions/{n}</code></td>
+        </tr>
+        <tr>
+            <td>Role gating</td>
+            <td>Client sees 2D / 3D / 360°; contractor sees dimensions sheet only</td>
+        </tr>
+        <tr>
+            <td>Privacy</td>
+            <td><code>project_blueprints</code> is a sanitized projection — no 3D/panorama URLs, enforced by
+                <code>firestore.rules</code></td>
+        </tr>
+    </table>
+
+    <h2>10. Connects &amp; Monetization</h2>
+    <p>Connects are the bidding currency for Thekaydaars.</p>
+    <pre>
+Plan activated ──► monthly connects granted ──┐
+Buy connects package ─────────────────────────┤──► users doc balance
+Monthly expiry check ─────────────────────────┘
+                     │
+Thekaydaar places bid
+      │
+      ▼
+Firestore transaction
+      ├── Plan allows bidding?  ── No ──► Upgrade plan
+      ├── Balance covers cost?  ── No ──► Buy more connects
+      │        │ Yes
+      ▼        ▼
+Deduct plan connects first, then purchased
+      │
+      ▼
+connects_transactions ledger record
+</pre>
+    <table>
+        <tr>
+            <th>Rule</th>
+            <th>Detail</th>
+        </tr>
+        <tr>
+            <td>Bid cost</td>
+            <td>Computed from the project's budget range</td>
+        </tr>
+        <tr>
+            <td>Deduction order</td>
+            <td>Plan connects first, then purchased connects</td>
+        </tr>
+        <tr>
+            <td>Free plan</td>
+            <td>Cannot bid — upgrade required</td>
+        </tr>
+        <tr>
+            <td>Expiry</td>
+            <td>Plan connects expire monthly; purchased connects persist</td>
+        </tr>
+        <tr>
+            <td>Ledger</td>
+            <td>Every grant / purchase / spend recorded in <code>connects_transactions</code></td>
+        </tr>
+    </table>
+
+    <h2>11. Firestore Data Model</h2>
+    <table>
+        <tr>
+            <th>Collection</th>
+            <th>Purpose</th>
+            <th>Key Fields</th>
+        </tr>
+        <tr>
+            <td><code>users/{uid}</code></td>
+            <td>Accounts &amp; Connects balance</td>
+            <td>role, accountStatus, planName, planConnects, purchasedConnects, totalConnects, isPremium</td>
+        </tr>
+        <tr>
+            <td><code>clients/{uid}</code></td>
+            <td>Client profiles</td>
+            <td>profile, NIC verification, plan quota</td>
+        </tr>
+        <tr>
+            <td><code>thekaydaars/{uid}</code></td>
+            <td>Contractor profiles</td>
+            <td>portfolio, completed-jobs count, ratings</td>
+        </tr>
+        <tr>
+            <td><code>projects/{id}</code></td>
+            <td>Posted projects</td>
+            <td>status, bids[], acceptedBid, housePlanId, plotDetails</td>
+        </tr>
+        <tr>
+            <td><code>active_jobs/{id}</code></td>
+            <td>Hired jobs per Thekaydaar</td>
+            <td>projectId, participants</td>
+        </tr>
+        <tr>
+            <td><code>chats/{jobId}</code></td>
+            <td>Chat metadata</td>
+            <td>jobStatus</td>
+        </tr>
+        <tr>
+            <td><code>chats/{jobId}/messages</code></td>
+            <td>Real-time messages</td>
+            <td>text / image messages</td>
+        </tr>
+        <tr>
+            <td><code>contracts/{id}</code></td>
+            <td>Contracts</td>
+            <td>status, scope of work</td>
+        </tr>
+        <tr>
+            <td><code>house_plans/{id}</code></td>
+            <td>AI plans — client-private</td>
+            <td>full plan JSON</td>
+        </tr>
+        <tr>
+            <td><code>house_plans/{id}/versions/{n}</code></td>
+            <td>Plan version history</td>
+            <td>per-version plan JSON</td>
+        </tr>
+        <tr>
+            <td><code>project_blueprints/{projectId}</code></td>
+            <td>Sanitized blueprint for contractors</td>
+            <td>dimensions only</td>
+        </tr>
+        <tr>
+            <td><code>connects_transactions/{id}</code></td>
+            <td>Connects ledger</td>
+            <td>type (bid_spend / plan_grant / purchase), amount</td>
+        </tr>
+        <tr>
+            <td><code>reviews/{id}</code></td>
+            <td>Ratings &amp; reviews</td>
+            <td>reviewer, reviewee, project</td>
+        </tr>
+    </table>
+
+    <h2>12. Project Structure &amp; Modules</h2>
+    <table>
+        <tr>
+            <th>Module (lib/)</th>
+            <th>Responsibility</th>
+        </tr>
+        <tr>
+            <td><code>main.dart</code></td>
+            <td>Entry point — env loading, Firebase init, role routing</td>
+        </tr>
+        <tr>
+            <td><code>Client/</code></td>
+            <td>Client dashboard, project posting, project detail, wizard entry</td>
+        </tr>
+        <tr>
+            <td><code>Theekaydaar/</code></td>
+            <td>Contractor dashboard, project browsing, active jobs, my bids, public profile</td>
+        </tr>
+        <tr>
+            <td><code>house_planner/</code></td>
+            <td>Wizard, plan models, providers (local + Gemini), 2D/3D/360 viewers, plan service</td>
+        </tr>
+        <tr>
+            <td><code>MessageAndNotification/</code></td>
+            <td>Chat service, chat meta, notifications, Cloudinary config</td>
+        </tr>
+        <tr>
+            <td><code>contract/</code></td>
+            <td>Contract screens, PDF generator, scope of work</td>
+        </tr>
+        <tr>
+            <td><code>Payment&amp;Requests/</code></td>
+            <td>Billing screen, Connects plans / purchase / service</td>
+        </tr>
+        <tr>
+            <td><code>rating_system/</code></td>
+            <td>Review service and rating UI</td>
+        </tr>
+        <tr>
+            <td><code>admin/</code></td>
+            <td>Super Admin, Regional Admin, Support Desk, Area Handler dashboards</td>
+        </tr>
+        <tr>
+            <td><code>services/</code></td>
+            <td>EnvConfig, contract services, translation (EN/UR)</td>
+        </tr>
+        <tr>
+            <td><code>model/</code></td>
+            <td>Shared data models (project, contract)</td>
+        </tr>
+        <tr>
+            <td><code>Widgets/</code>, <code>ui/</code>, <code>utils/</code></td>
+            <td>Shared widgets, auth UI, utilities</td>
+        </tr>
+        <tr>
+            <td><code>onboardingScreens/</code>, <code>profile_sub_pages/</code></td>
+            <td>Onboarding &amp; profile screens</td>
+        </tr>
+        <tr>
+            <td><code>assets/</code></td>
+            <td>Images, material images, Lottie animations, fonts</td>
+        </tr>
+    </table>
+
+    <h2>13. Security Model</h2>
+    <table>
+        <tr>
+            <th>Control</th>
+            <th>Enforcement</th>
+        </tr>
+        <tr>
+            <td>Secrets in .env</td>
+            <td>Loaded at runtime; <code>.env</code>, <code>google-services.json</code>, <code>firebase.json</code>,
+                <code>local.properties</code> all git-ignored; only placeholder <code>.example</code> templates are
+                committed</td>
+        </tr>
+        <tr>
+            <td>AI plan privacy</td>
+            <td>Firestore rules block contractor access to <code>house_plans</code>; only sanitized
+                <code>project_blueprints</code> is readable</td>
+        </tr>
+        <tr>
+            <td>Connects integrity</td>
+            <td>Balance checks + deduction inside a single Firestore transaction</td>
+        </tr>
+        <tr>
+            <td>Admin access</td>
+            <td>Super Admin gated via <code>SUPER_ADMIN_EMAIL</code>; admin accounts require approval
+                (<code>accountStatus</code>)</td>
+        </tr>
+        <tr>
+            <td>Maps key</td>
+            <td>Injected at build time from <code>android/local.properties</code> via manifest placeholders</td>
+        </tr>
+    </table>
+
+    <h2>14. Getting Started</h2>
+    <h3>Prerequisites</h3>
+    <ul>
+        <li>Flutter SDK (Dart ^3.10.4)</li>
+        <li>A Firebase project with Authentication, Cloud Firestore, and Storage enabled</li>
+        <li>(Optional) Gemini API key, Cloudinary account, Google Maps API key</li>
+    </ul>
+    <h3>Setup Steps</h3>
+    <ol>
+        <li>Clone: <code>git clone https://github.com/KashifDev4you/ThekayDaar-AI.git</code></li>
+        <li>Install dependencies: <code>flutter pub get</code></li>
+        <li>Copy environment template and fill values: <code>Copy-Item .env.example .env</code></li>
+        <li>Copy Firebase templates: <code>android/app/google-services.json.example</code> →
+            <code>google-services.json</code>; <code>firebase.json.example</code> → <code>firebase.json</code></li>
+        <li>Add Maps key to <code>android/local.properties</code>: <code>GOOGLE_MAPS_API_KEY=your_key</code></li>
+        <li>Run: <code>flutter run</code></li>
+    </ol>
+
+    <h2>15. Environment Variables</h2>
+    <table>
+        <tr>
+            <th>Variable</th>
+            <th>Required</th>
+            <th>Purpose</th>
+        </tr>
+        <tr>
+            <td><code>FIREBASE_*</code> (project ID, API keys, app IDs per platform)</td>
+            <td>✅</td>
+            <td>Firebase configuration for all platforms</td>
+        </tr>
+        <tr>
+            <td><code>SUPER_ADMIN_EMAIL</code></td>
+            <td>✅</td>
+            <td>The email that receives Super Admin privileges</td>
+        </tr>
+        <tr>
+            <td><code>GOOGLE_MAPS_API_KEY</code></td>
+            <td>✅</td>
+            <td>Google Maps integration (also needed in android/local.properties)</td>
+        </tr>
+        <tr>
+            <td><code>CLOUDINARY_CLOUD_NAME</code>, <code>CLOUDINARY_UPLOAD_PRESET</code></td>
+            <td>✅</td>
+            <td>Image uploads for chat &amp; project photos</td>
+        </tr>
+        <tr>
+            <td><code>GEMINI_API_KEY</code>, <code>GEMINI_MODEL</code></td>
+            <td>⭕ Optional</td>
+            <td>AI enhancements — the app works fully offline without them</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
